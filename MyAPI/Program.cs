@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 
 using MyAPI.Data;
-
+using MyAPI.Services;
+//using MyAPI.Services.CreateServicesFolder;
 internal class Program
 {
     private static void Main(string[] args)
@@ -38,6 +39,15 @@ internal class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        var scope = app.Services.CreateScope();
+        services.AddTransient<IRepository, Repository>();
+        services.AddSingleton<ServiceEventHandler>();
+        //services.AddSingleton<ICreateServices, CreateServices>();
+
+        var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        ctx.Database.EnsureCreated();
+        //var a = new CreateServices(IRepository repo);
 
         app.Run();
     }
