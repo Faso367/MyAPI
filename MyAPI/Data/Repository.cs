@@ -19,11 +19,24 @@ namespace MyAPI.Data
             _ctx.Services.Add(service);
         }
 
+        // РАБОЧИЙ МЕТОД
         public Service GetService(int id)
         {
             // Если полученный id совпадает с найденным в БД, то возвращаем (достаем) эту запись
             return _ctx.Services.FirstOrDefault(p => p.Id == id);
         }
+
+        //public async Service GetService(int id)
+        //{
+        //    // Если полученный id совпадает с найденным в БД, то возвращаем (достаем) эту запись
+        //    //return await _ctx.Services.FirstOrDefault(p => p.Id == id);
+        //    await _ctx.Services.FirstOrDefault(p => p.Id == id);
+
+        //    if (await _ctx.SaveChangesAsync() > 0)
+        //        return true;
+
+        //    return false;
+        //}
 
         public List<Service> GetAllServices()
         {
@@ -33,7 +46,8 @@ namespace MyAPI.Data
 
         public void UpdateService(Service service)
         {
-            service.UpdatedAt = DateTime.Now;
+            //service.UpdatedAt = DateTime.Now;
+            Console.WriteLine("UpdateService");
 
             _ctx.Services.Update(service);
         }

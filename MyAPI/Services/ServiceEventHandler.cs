@@ -8,7 +8,7 @@ using MyAPI.Models;
 
 namespace MyAPI.Services
 {
-    public class ServiceEventHandler
+    public class ServiceEventHandler : IServiceEventHandler
     {
         //private Service1 _service1;
 
@@ -26,6 +26,7 @@ namespace MyAPI.Services
         private IRepository repository;
         private Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
         private ServiceVariables s1, s2, s3;
+        private bool servicesIsCreated = false;
         //private ICreateServices _createServices;
         //private Service1 _service1;
 
@@ -44,9 +45,16 @@ namespace MyAPI.Services
         public ServiceEventHandler(IRepository _repository)
         {
             repository = _repository;
+
+            Console.WriteLine("EventHandler");
             //_createServices = createServices;
 
-            CreateServices();
+            if (servicesIsCreated == false)
+            {
+                CreateServices();
+                servicesIsCreated = true;
+            }
+                
 
             Service1 service1 = new Service1();
             service1.NoticeFromService += Service1Handler;
@@ -60,23 +68,23 @@ namespace MyAPI.Services
 
             //}
 
-            var timer = new System.Timers.Timer();
-            timer.Interval = 60000; // Срабатывает раз в минуту
+            //var timer = new System.Timers.Timer();
+            //timer.Interval = 60000; // Срабатывает раз в минуту
 
-            // Hook up the Elapsed event for the timer. 
+            //// Hook up the Elapsed event for the timer. 
 
-            // Обновляем значения таймеров и статус в БД
-            timer.Elapsed += UpdateDB;
+            //// Обновляем значения таймеров и статус в БД
+            //timer.Elapsed += UpdateDB;
 
-            //TimerCallback tm = new TimerCallback(ChangeTimers);
+            ////TimerCallback tm = new TimerCallback(ChangeTimers);
 
-            //timer.Elapsed.Add(UpdateDB);
+            ////timer.Elapsed.Add(UpdateDB);
 
-            // Have the timer fire repeated events (true is the default)
-            timer.AutoReset = true;
+            //// Have the timer fire repeated events (true is the default)
+            //timer.AutoReset = true;
 
-            // Start the timer
-            timer.Enabled = true;
+            //// Start the timer
+            //timer.Enabled = true;
 
             //Console.WriteLine("Press the Enter key to exit the program at any time... ");
             //Console.ReadLine();
@@ -141,52 +149,62 @@ namespace MyAPI.Services
 
         //private void UpdateDB(ServiceVariables s)
 
-        private void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
+        //private void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
+        //private async void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
+        //{
+        //    //Func<Service, ServiceVariables, bool> {
 
+        //    //}
+
+        //    void Change(Service service_db, ServiceVariables s)
+        //    {
+        //        service_db.Status = s.Status;
+        //        service_db.DownTime = s.DownTime;
+        //        service_db.WorkTime = s.WorkTime;
+        //        service_db.BadWorkTime = s.BadWorkTime;
+        //    }
+        //    Change(service1_db_ekz, s1);
+        //    Change(service2_db_ekz, s2);
+        //    Change(service3_db_ekz, s3);
+
+        //    repository.UpdateService(service1_db_ekz);
+        //    repository.UpdateService(service2_db_ekz);
+        //    repository.UpdateService(service3_db_ekz);
+
+        //    await repository.SaveChangesAsync();
+        //    //service1_db_ekz.Status = s1.Status;
+        //    //service1_db_ekz.DownTime = s1.DownTime;
+        //    //service1_db_ekz.WorkTime = s1.WorkTime;
+        //    //service1_db_ekz.BadWorkTime = s1.BadWorkTime;
+
+        //    //service2_db_ekz.Status = s2.Status;
+        //    //service2_db_ekz.DownTime = s2.DownTime;
+        //    //service2_db_ekz.WorkTime = s2.WorkTime;
+        //    //service2_db_ekz.BadWorkTime = s2.BadWorkTime;
+
+        //    //service3_db_ekz.Status = s3.Status;
+        //    //service3_db_ekz.DownTime = s3.DownTime;
+        //    //service3_db_ekz.WorkTime = s3.WorkTime;
+        //    //service3_db_ekz.BadWorkTime = s3.BadWorkTime;
+
+        //}
+
+        //public void CreateServices()
+        //public async void CreateServices()
+        public async Task<bool> CreateServices()
         {
-            //Func<Service, ServiceVariables, bool> {
 
-            //}
-
-            void Change(Service service_db, ServiceVariables s)
-            {
-                service_db.Status = s.Status;
-                service_db.DownTime = s.DownTime;
-                service_db.WorkTime = s.WorkTime;
-                service_db.BadWorkTime = s.BadWorkTime;
-            }
-            Change(service1_db_ekz, s1);
-            Change(service2_db_ekz, s2);
-            Change(service3_db_ekz, s3);
-
-            repository.UpdateService(service1_db_ekz);
-            repository.UpdateService(service2_db_ekz);
-            repository.UpdateService(service3_db_ekz);
-            //service1_db_ekz.Status = s1.Status;
-            //service1_db_ekz.DownTime = s1.DownTime;
-            //service1_db_ekz.WorkTime = s1.WorkTime;
-            //service1_db_ekz.BadWorkTime = s1.BadWorkTime;
-
-            //service2_db_ekz.Status = s2.Status;
-            //service2_db_ekz.DownTime = s2.DownTime;
-            //service2_db_ekz.WorkTime = s2.WorkTime;
-            //service2_db_ekz.BadWorkTime = s2.BadWorkTime;
-
-            //service3_db_ekz.Status = s3.Status;
-            //service3_db_ekz.DownTime = s3.DownTime;
-            //service3_db_ekz.WorkTime = s3.WorkTime;
-            //service3_db_ekz.BadWorkTime = s3.BadWorkTime;
-
-        }
-
-        public void CreateServices()
-        {
+            Console.WriteLine("CreateServices");
 
             var _service1_db_ekz = new Service
             {
                 Id = 1,
                 Name = "Service1",
                 Description = "Service1Description",
+                WorkTime = 0,
+                DownTime= 0,
+                BadWorkTime= 0,
+                UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
                 Status = "DontWork"
             };
@@ -196,6 +214,10 @@ namespace MyAPI.Services
                 Id = 2,
                 Name = "Service2",
                 Description = "Service2Description",
+                WorkTime = 0,
+                DownTime = 0,
+                BadWorkTime = 0,
+                UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
                 Status = "DontWork"
             };
@@ -205,6 +227,10 @@ namespace MyAPI.Services
                 Id = 3,
                 Name = "Service3",
                 Description = "Service3Description",
+                WorkTime = 0,
+                DownTime = 0,
+                BadWorkTime = 0,
+                UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
                 Status = "DontWork"
             };
@@ -213,6 +239,19 @@ namespace MyAPI.Services
             repository.AddService(_service1_db_ekz);
             repository.AddService(_service2_db_ekz);
             repository.AddService(_service3_db_ekz);
+
+            await repository.SaveChangesAsync();
+
+            int y = 0;
+            for (int i = 0; i < 1000; i++)
+                y++;
+
+            if (await repository.SaveChangesAsync())
+                return true;
+
+            return false;
+
+            //Console.WriteLine("777");
         }
     }
 }

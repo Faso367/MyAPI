@@ -11,6 +11,8 @@ namespace MyAPI.Controllers.Main
     {
 
         private IRepository _repo;
+        private IServiceEventHandler _serviceEventHandler;
+
         //private ICreateServices _createServices;
         //private IService1 _service1;
 
@@ -19,9 +21,10 @@ namespace MyAPI.Controllers.Main
 
         //Прототип метода: void MethodName(object sender, DescriptionOfEventArgs e);
 
-        public MainController(IRepository repo)
+        public MainController(IRepository repo, IServiceEventHandler serviceEventHandler)
         {
             _repo = repo; // Получаем экземпляр интерфейса для доступа ко всем методам его методам
+            _serviceEventHandler = serviceEventHandler;
             //_createServices = createServices;
             //_service1 = service1;
             // Создаем экземпляр делегата EventHandler<NewMailEventArgs>,
@@ -36,6 +39,7 @@ namespace MyAPI.Controllers.Main
         {
             //return new JsonResult(_repo.GetAllServices());
             //var ekz = new EventHandler();
+            //_serviceEventHandler.CreateServices();
             return new JsonResult(_repo.GetService(1));
         }
 

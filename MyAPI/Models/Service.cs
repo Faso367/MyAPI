@@ -4,7 +4,7 @@ namespace MyAPI.Models
 {
     public class Service
     {
-        [Key] // Помечаем, что это первичный ключ (уникальный ID)
+        //[Key] // Помечаем, что это первичный ключ (уникальный ID)
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -13,7 +13,9 @@ namespace MyAPI.Models
         public int? WorkTime { get; set; }
         public int? BadWorkTime { get; set; }
         public int? DownTime { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        //public DateTimeOffset CreatedAt { get; set; }
+        //public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

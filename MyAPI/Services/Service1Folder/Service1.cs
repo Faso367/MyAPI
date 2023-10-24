@@ -18,6 +18,7 @@ namespace MyAPI.Services.Service1Folder
 
         public void Work1()
         {
+            Console.WriteLine("Service1");
             //_repo.
             StatusChange(new DescriptionOfEventArgs("Работает"));
             int x = 0;
