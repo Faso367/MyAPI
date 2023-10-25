@@ -25,27 +25,29 @@ namespace MyAPI.Services
         private static Dictionary<int, string> StatusStatistic = new Dictionary<int, string>();
         private IRepository repository;
         private Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
-        private ServiceVariables s1, s2, s3;
-        private bool servicesIsCreated = false, structureEkzIsCreated = false;
-
+        //private ServiceVariables s1, s2, s3;
+        //private ServiceVariables s; 
+        private bool servicesIsCreated = false, structureEkz1IsCreated = false, structureEkz2IsCreated = false, structureEkz3IsCreated = false;
+        private int structureEkzCount = 0;
         
 
         //private ICreateServices _createServices;
         //private Service1 _service1;
 
-        struct ServiceVariables
-        {
-            public bool isFirstTime = true;
-            public Stopwatch sw = new Stopwatch();
-            public int DownTime = 0;
-            public int WorkTime = 0;
-            public int BadWorkTime = 0;
-            public string? Status;
+        // Эта структура нужна для временного хранения данных
+        //struct ServiceVariables
+        //{
+        //    public bool isFirstTime = true;
+        //    public Stopwatch? sw = new Stopwatch();
+        //    public int DownTime = 0;
+        //    public int WorkTime = 0;
+        //    public int BadWorkTime = 0;
+        //    public string? Status;
 
-            public ServiceVariables() {
-                //isFirstTime = true;
-            }
-        }
+        //    public ServiceVariables() {
+        //        //isFirstTime = true;
+        //    }
+        //}
 
         public ServiceEventHandler(IRepository _repository)
         {
@@ -64,13 +66,13 @@ namespace MyAPI.Services
             if (servicesIsCreated == false)
             {
                 CreateServices();
-
+                // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
                 Service1 service1 = new Service1();
-                service1.NoticeFromService += Service1Handler;
+                service1.NoticeFromService += ServiceHandler;
                 
                 var timer = new System.Timers.Timer();
                 //timer.Interval = 60000; // Срабатывает раз в минуту
-                timer.Interval = 10000;
+                timer.Interval = 20000;
                 // Обновляем значения таймеров и статус в БД
                 timer.Elapsed += UpdateDB;
                 timer.AutoReset = true;
@@ -84,77 +86,109 @@ namespace MyAPI.Services
 
 
         // Метод обработчик
-        private void Service1Handler(object sender, DescriptionOfEventArgs e)
+        private void ServiceHandler(object sender, DescriptionOfEventArgs e)
         {
-            
-            if (structureEkzIsCreated == false)
+            //ServiceVariables s = null;
+
+            bool Check()
             {
-                var s = new ServiceVariables();
-                s1 = s;
-                structureEkzIsCreated = true;
+                return true;
             }
 
-            // AddCounter(s1, e); БЫЛО
+            //if (structureEkzCount < 4)
+            //{
+            //    //var s = new ServiceVariables();
+                
+            //    structureEkzCount++;
+            //}
 
-            AddCounter(ref s1, e);
+
+            if (e.ServiceId == 1)
+            {
+
+                //if (service1_db_ekz.Id != 0) // Если 
+                    //service1_db_ekz = new Service();
+
+                AddCounter(ref service1_db_ekz, e);
+                //structureEkz1IsCreated = true;
+            }
+            else if (e.ServiceId == 2)
+            {
+                //Service service2_db_ekz = new Service();
+                AddCounter(ref service2_db_ekz, e);
+                //structureEkz1IsCreated = true;
+            }
+            else if (e.ServiceId == 3)
+            {
+                //Service service3_db_ekz = new Service();
+                AddCounter(ref service3_db_ekz, e);
+                //structureEkz1IsCreated = true;
+            }
+
+
         }
 
 
-        private void AddCounter(ref ServiceVariables s, DescriptionOfEventArgs e)
+        //private void AddCounter(ref ServiceVariables s, Service service, DescriptionOfEventArgs e)
+        private void AddCounter(ref Service service_db, DescriptionOfEventArgs e)
         {
-            // Если запускаем метод в первый раз
-            if (s.isFirstTime)
+            // Если запускаем метод для этого экземпляра в первый раз
+            if (service_db.isFirstTime)
             {
-                s.isFirstTime = false;
-                s.sw.Start();
+                service_db.isFirstTime = false;
+                service_db.Timer.Start();
             }
-            s.Status = e.Message;
+            service_db.Status = e.Message;
             //Console.WriteLine(e.Message);
             if (e.Message == "Не работает")
             {
-                s.DownTime += s.sw.Elapsed.Seconds;
+                service_db.DownTime += service_db.Timer.Elapsed.Seconds;
                 //s.DownTime += s.sw.
                 //s.Status = e.Message;
                 //sw.Restart();
-                s.sw.Reset();
+                service_db.Timer.Reset();
                 //Change();
             }
             else if (e.Message == "Работает")
             {
-                s.WorkTime += s.sw.Elapsed.Seconds;
-                s.sw.Reset();
+                service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
+                service_db.Timer.Reset();
             }
 
             else if (e.Message == "Нестабильно работает")
             {
-                s.BadWorkTime += s.sw.Elapsed.Seconds;
-                s.sw.Reset();
+                service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
+                service_db.Timer.Reset();
             }
 
+            //service_db.Status = s.Status;
+            //service_db.DownTime = s.DownTime;
+            //service_db.WorkTime = s.WorkTime;
+            //service_db.BadWorkTime = s.BadWorkTime;
 
-            Change(ref service1_db_ekz, s);
-            Change(ref service2_db_ekz, s);
-            Change(ref service3_db_ekz, s);
+            //Change(ref service1_db_ekz, s);
+            //Change(ref service2_db_ekz, s);
+            //Change(ref service3_db_ekz, s);
 
             Console.WriteLine("Podpischik");
         }
 
 
         //private void Change(Service service_db, ServiceVariables s)
-        private void Change(ref Service service_db, ServiceVariables s)
-        {
-            service_db.Status = s.Status;
-            service_db.DownTime = s.DownTime;
-            service_db.WorkTime = s.WorkTime;
-            service_db.BadWorkTime = s.BadWorkTime;
-        }
+        //private void Change(ref Service service_db, ServiceVariables s)
+        //{
+        //    service_db.Status = s.Status;
+        //    service_db.DownTime = s.DownTime;
+        //    service_db.WorkTime = s.WorkTime;
+        //    service_db.BadWorkTime = s.BadWorkTime;
+        //}
 
         private async void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
         {
             //Func<Service, ServiceVariables, bool> {
 
             //}
-
+            
             //Change(service1_db_ekz, s1);
             //Change(service2_db_ekz, s2);
             //Change(service3_db_ekz, s3);
@@ -164,8 +198,8 @@ namespace MyAPI.Services
             //Change(ref service3_db_ekz, s3);
 
             repository.UpdateService(service1_db_ekz);
-            repository.UpdateService(service2_db_ekz);
-            repository.UpdateService(service3_db_ekz);
+            //repository.UpdateService(service2_db_ekz); БЫЛО
+            //repository.UpdateService(service3_db_ekz); БЫЛО
 
             Console.WriteLine("Update");
 

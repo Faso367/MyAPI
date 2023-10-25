@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace MyAPI.Models
 {
@@ -9,6 +10,9 @@ namespace MyAPI.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+
+        public bool isFirstTime { get; set; }
+        public Stopwatch? Timer { get; set; }
 
         public int? WorkTime { get; set; }
         public int? BadWorkTime { get; set; }

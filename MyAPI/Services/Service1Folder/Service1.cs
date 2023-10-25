@@ -24,9 +24,9 @@ namespace MyAPI.Services.Service1Folder
 
         public void Work1()
         {
-            Console.WriteLine("Service1");
+            Console.WriteLine("Service1 начал работу");
             //_repo.
-            StatusChange(new DescriptionOfEventArgs("Работает"));
+            StatusChange(new DescriptionOfEventArgs("Работает", 1));
             int x = 0;
             for (int i = 500000; i < 0; i++)
                 x++;
@@ -34,13 +34,15 @@ namespace MyAPI.Services.Service1Folder
             Random rnd = new Random();
             int value = rnd.Next(0, 10);
             if (value < 3)
-                StatusChange(new DescriptionOfEventArgs("Нестабильно работает"));
+                StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
 
             for (int i = 500000; i < 0; i++)
                 x++;
 
             //return "Не работает";
-            StatusChange(new DescriptionOfEventArgs("Не работает"));
+            StatusChange(new DescriptionOfEventArgs("Не работает", 1));
+
+            Console.WriteLine("Service1 отработал");
         }
 
         // Метод для уведомления подписчиков
@@ -63,12 +65,12 @@ namespace MyAPI.Services.Service1Folder
         // Этап 1. Определение типа для хранения информации,
         // которая передается получателям уведомления о событии
 
-        //public string ServiceId { get; private set; }
+        public int ServiceId { get; private set; }
         public string Message { get; private set; }
-        public DescriptionOfEventArgs(string message)
+        public DescriptionOfEventArgs(string message, int serviceId)
         {
-            //ServiceId = serviceId;
             Message = message;
+            ServiceId = serviceId;
         }
     }
 
