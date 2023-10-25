@@ -80,6 +80,7 @@ namespace MyAPI.Services
                 // Start the timer
                 timer.Enabled = true;
                 servicesIsCreated = true;
+                // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
                 service1.Work1();
             }
         }
@@ -88,44 +89,14 @@ namespace MyAPI.Services
         // Метод обработчик
         private void ServiceHandler(object sender, DescriptionOfEventArgs e)
         {
-            //ServiceVariables s = null;
-
-            bool Check()
-            {
-                return true;
-            }
-
-            //if (structureEkzCount < 4)
-            //{
-            //    //var s = new ServiceVariables();
-                
-            //    structureEkzCount++;
-            //}
-
-
             if (e.ServiceId == 1)
-            {
-
-                //if (service1_db_ekz.Id != 0) // Если 
-                    //service1_db_ekz = new Service();
-
                 AddCounter(ref service1_db_ekz, e);
-                //structureEkz1IsCreated = true;
-            }
+
             else if (e.ServiceId == 2)
-            {
-                //Service service2_db_ekz = new Service();
                 AddCounter(ref service2_db_ekz, e);
-                //structureEkz1IsCreated = true;
-            }
+
             else if (e.ServiceId == 3)
-            {
-                //Service service3_db_ekz = new Service();
                 AddCounter(ref service3_db_ekz, e);
-                //structureEkz1IsCreated = true;
-            }
-
-
         }
 
 
@@ -135,8 +106,10 @@ namespace MyAPI.Services
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
-                service_db.isFirstTime = false;
+                
+                //service_db.Timer = new Stopwatch();
                 service_db.Timer.Start();
+                service_db.isFirstTime = false;
             }
             service_db.Status = e.Message;
             //Console.WriteLine(e.Message);
@@ -161,41 +134,11 @@ namespace MyAPI.Services
                 service_db.Timer.Reset();
             }
 
-            //service_db.Status = s.Status;
-            //service_db.DownTime = s.DownTime;
-            //service_db.WorkTime = s.WorkTime;
-            //service_db.BadWorkTime = s.BadWorkTime;
-
-            //Change(ref service1_db_ekz, s);
-            //Change(ref service2_db_ekz, s);
-            //Change(ref service3_db_ekz, s);
-
             Console.WriteLine("Podpischik");
         }
 
-
-        //private void Change(Service service_db, ServiceVariables s)
-        //private void Change(ref Service service_db, ServiceVariables s)
-        //{
-        //    service_db.Status = s.Status;
-        //    service_db.DownTime = s.DownTime;
-        //    service_db.WorkTime = s.WorkTime;
-        //    service_db.BadWorkTime = s.BadWorkTime;
-        //}
-
         private async void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
         {
-            //Func<Service, ServiceVariables, bool> {
-
-            //}
-            
-            //Change(service1_db_ekz, s1);
-            //Change(service2_db_ekz, s2);
-            //Change(service3_db_ekz, s3);
-
-            //Change(ref service1_db_ekz, s1);
-            //Change(ref service2_db_ekz, s2);
-            //Change(ref service3_db_ekz, s3);
 
             repository.UpdateService(service1_db_ekz);
             //repository.UpdateService(service2_db_ekz); БЫЛО
@@ -204,21 +147,6 @@ namespace MyAPI.Services
             Console.WriteLine("Update");
 
             await repository.SaveChangesAsync();
-            //service1_db_ekz.Status = s1.Status;
-            //service1_db_ekz.DownTime = s1.DownTime;
-            //service1_db_ekz.WorkTime = s1.WorkTime;
-            //service1_db_ekz.BadWorkTime = s1.BadWorkTime;
-
-            //service2_db_ekz.Status = s2.Status;
-            //service2_db_ekz.DownTime = s2.DownTime;
-            //service2_db_ekz.WorkTime = s2.WorkTime;
-            //service2_db_ekz.BadWorkTime = s2.BadWorkTime;
-
-            //service3_db_ekz.Status = s3.Status;
-            //service3_db_ekz.DownTime = s3.DownTime;
-            //service3_db_ekz.WorkTime = s3.WorkTime;
-            //service3_db_ekz.BadWorkTime = s3.BadWorkTime;
-
         }
 
         //public void CreateServices()
@@ -238,9 +166,15 @@ namespace MyAPI.Services
                 BadWorkTime= 0,
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
-                Status = "DontWork"
+                Status = "DontWork",
+                isFirstTime = true,
+                Timer = new Stopwatch()
+
             };
             service1_db_ekz = _service1_db_ekz;
+
+            // НА ВРЕМЯ
+
             var _service2_db_ekz = new Service
             {
                 Id = 2,
@@ -251,7 +185,9 @@ namespace MyAPI.Services
                 BadWorkTime = 0,
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
-                Status = "DontWork"
+                Status = "DontWork",
+                isFirstTime = true,
+                Timer = new Stopwatch()
             };
             service2_db_ekz = _service1_db_ekz;
             var _service3_db_ekz = new Service
@@ -264,11 +200,14 @@ namespace MyAPI.Services
                 BadWorkTime = 0,
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
-                Status = "DontWork"
+                Status = "DontWork",
+                isFirstTime = true,
+                Timer = new Stopwatch()
             };
             service3_db_ekz = _service3_db_ekz;
 
             repository.AddService(_service1_db_ekz);
+
             repository.AddService(_service2_db_ekz);
             repository.AddService(_service3_db_ekz);
 
@@ -282,8 +221,6 @@ namespace MyAPI.Services
                 return true;
 
             return false;
-
-            //Console.WriteLine("777");
         }
     }
 }
