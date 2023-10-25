@@ -26,11 +26,16 @@ using MyAPI.Services;
 
 // Не использую норм БД, создаю только временную в памяти
 services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"));
+//services.AddS
+
+//services.AddHostedService<ServiceEventHandler>();
+//services.Add
 
 services.AddTransient<IRepository, Repository>();   //БЫЛО
 //services.AddScoped<IRepository, Repository>();   // СТАЛО
-services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
-//services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
+//services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
+//services.AddSingleton<>
+services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
 var app = builder.Build();
 
@@ -47,11 +52,16 @@ var app = builder.Build();
 
     app.MapControllers();
 
-    var scope = app.Services.CreateScope();
-        
-    //services.AddSingleton<ICreateServices, CreateServices>();
 
-    var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+// Позволяет создать Singleton объект (создаётся только 1 раз),
+// который является одноэлементным и имеет одноразовые зависимости (нап Transient repository)
+
+var scope = app.Services.CreateScope();
+var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();    
+//services.AddSingleton<ICreateServices, CreateServices>();
+
+
+//var serviceEventHandler = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
 //ctx.Database.EnsureCreated();
 //var a = new CreateServices(IRepository repo);
 

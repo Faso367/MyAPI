@@ -22,6 +22,8 @@ namespace MyAPI.Controllers.Main
         //Прототип метода: void MethodName(object sender, DescriptionOfEventArgs e);
 
         public MainController(IRepository repo, IServiceEventHandler serviceEventHandler)
+        //public MainController(IRepository repo, ServiceEventHandler serviceEventHandler)
+        //public MainController(IRepository repo)
         {
             _repo = repo; // Получаем экземпляр интерфейса для доступа ко всем методам его методам
             _serviceEventHandler = serviceEventHandler;
@@ -47,7 +49,8 @@ namespace MyAPI.Controllers.Main
         public JsonResult Post()
         {
             //RepairService.Work();
-            return new JsonResult("Work was successfully done");
+            //return new JsonResult("Work was successfully done");
+            return new JsonResult(_repo.GetService(1));
         }
 
         //public Fax(Service1 mm)

@@ -16,6 +16,12 @@ namespace MyAPI.Services.Service1Folder
         //    _repo = repo; // Получаем экземпляр интерфейса для доступа ко всем методам его методам
         //}
 
+
+        public Service1()
+        {
+            //Work1();
+        }
+
         public void Work1()
         {
             Console.WriteLine("Service1");
@@ -43,9 +49,11 @@ namespace MyAPI.Services.Service1Folder
         {
             // Сохраняем ссылку на делегат во временной переменной, для обеспечения безопасности потоков
             EventHandler<DescriptionOfEventArgs> temp = Volatile.Read(ref NoticeFromService);
+
             // Если есть объекты, зарегистрированные для получения уведомления о событии,
             // уведомляем их, чтобы избежать NullReferenceException
-            if (temp != null) temp(this, e);
+            if (temp != null) 
+                temp(this, e);
         }
     }
 
