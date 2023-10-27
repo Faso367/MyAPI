@@ -24,10 +24,13 @@ namespace MyAPI.Services
         //private bool isFirstTime = true;
         private static Dictionary<int, string> StatusStatistic = new Dictionary<int, string>();
         private IRepository repository;
-        private Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
+         
+        //private Service service1_db_ekz, service2_db_ekz, service3_db_ekz; // БЫЛО
+        private static Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
         //private ServiceVariables s1, s2, s3;
         //private ServiceVariables s; 
-        private bool servicesIsCreated = false, structureEkz1IsCreated = false, structureEkz2IsCreated = false, structureEkz3IsCreated = false;
+        private static bool servicesIsCreated = false;
+        private static Service1 service1;
         private int structureEkzCount = 0;
         
 
@@ -67,20 +70,44 @@ namespace MyAPI.Services
             {
                 CreateServices();
                 // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
-                Service1 service1 = new Service1();
+                //Service1 service1 = new Service1();
+                service1 = new Service1();
                 service1.NoticeFromService += ServiceHandler;
                 
-                var timer = new System.Timers.Timer();
-                //timer.Interval = 60000; // Срабатывает раз в минуту
-                timer.Interval = 20000;
-                // Обновляем значения таймеров и статус в БД
-                timer.Elapsed += UpdateDB;
-                timer.AutoReset = true;
+                //var timer = new System.Timers.Timer();
+                ////timer.Interval = 60000; // Срабатывает раз в минуту
+                //timer.Interval = 20000;
+                //// Обновляем значения таймеров и статус в БД
+                //timer.Elapsed += UpdateDB;
+                ////timer.Elapsed += repository.UpdateService;
+                //timer.AutoReset = true;
 
-                // Start the timer
-                timer.Enabled = true;
+                //// Start the timer
+                //timer.Enabled = true;
+
                 servicesIsCreated = true;
                 // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
+                service1.Work1();
+
+
+                var task2 = Task.Run(async () => {
+                    while (true)
+                    {
+                        try
+                        {
+                            await UpdateDB();
+                        }
+                        catch
+                        {
+                            //super easy error handling
+                        }
+                        await Task.Delay(TimeSpan.FromSeconds(40));
+                    }
+                });
+            }
+
+            else
+            {
                 service1.Work1();
             }
         }
@@ -119,25 +146,30 @@ namespace MyAPI.Services
                 //s.DownTime += s.sw.
                 //s.Status = e.Message;
                 //sw.Restart();
-                service_db.Timer.Reset();
+
+                //service_db.Timer.Reset();
+                service_db.Timer.Restart();
                 //Change();
             }
             else if (e.Message == "Работает")
             {
                 service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
-                service_db.Timer.Reset();
+                //service_db.Timer.Reset();
+                service_db.Timer.Restart();
             }
 
             else if (e.Message == "Нестабильно работает")
             {
                 service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
-                service_db.Timer.Reset();
+                //service_db.Timer.Reset();
+                service_db.Timer.Restart();
             }
 
             Console.WriteLine("Podpischik");
         }
 
-        private async void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
+        private async Task UpdateDB()
+        //private void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
         {
 
             repository.UpdateService(service1_db_ekz);

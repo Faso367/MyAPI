@@ -4,16 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 using MyAPI.Data;
 using MyAPI.Services;
+using System.Reflection.Emit;
 //using MyAPI.Services.CreateServicesFolder;
 //internal class Program
 //{
-    //private static void Main(string[] args)
-    //{
+//private static void Main(string[] args)
+//{
     var builder = WebApplication.CreateBuilder(args);
 
-    // Add services to the container.
+// Add services to the container.
 
-    var services = builder.Services;
+//builder.Entity<AccessLevel>().OwnsOne(x => x.Access);
+
+var services = builder.Services;
 
     services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -32,11 +35,15 @@ services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_A
 //services.Add
 
 services.AddTransient<IRepository, Repository>();   //БЫЛО
+
 //services.AddScoped<IRepository, Repository>();   // СТАЛО
 //services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
 //services.AddSingleton<>
+
 services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
+//services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
+//services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
 var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -57,7 +64,10 @@ var app = builder.Build();
 // который является одноэлементным и имеет одноразовые зависимости (нап Transient repository)
 
 var scope = app.Services.CreateScope();
-var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();    
+var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+//var serviceEventHandler = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
+
 //services.AddSingleton<ICreateServices, CreateServices>();
 
 

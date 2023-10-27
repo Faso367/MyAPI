@@ -25,23 +25,25 @@ namespace MyAPI.Services.Service1Folder
         public void Work1()
         {
             Console.WriteLine("Service1 начал работу");
-            //_repo.
-            StatusChange(new DescriptionOfEventArgs("Работает", 1));
-            int x = 0;
-            for (int i = 500000; i < 0; i++)
+
+            //while (true)
+            //{
+                //_repo.
+                StatusChange(new DescriptionOfEventArgs("Работает", 1));
+                int x = 0;
+                for (int i = 500000; i < 0; i++)
+                    x++;
+
+            for (int i = 200000; i < 0; i++)
                 x++;
+            StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
 
-            Random rnd = new Random();
-            int value = rnd.Next(0, 10);
-            if (value < 3)
-                StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
+                for (int i = 500000; i < 0; i++)
+                    x++;
 
-            for (int i = 500000; i < 0; i++)
-                x++;
-
-            //return "Не работает";
-            StatusChange(new DescriptionOfEventArgs("Не работает", 1));
-
+                //return "Не работает";
+                StatusChange(new DescriptionOfEventArgs("Не работает", 1));
+            //}
             Console.WriteLine("Service1 отработал");
         }
 

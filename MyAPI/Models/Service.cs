@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace MyAPI.Models
 {
+    //[Keyless]
     public class Service
     {
         //[Key] // Помечаем, что это первичный ключ (уникальный ID)
