@@ -42,16 +42,24 @@ namespace MyAPI.Controllers.Main
             //return new JsonResult(_repo.GetAllServices());
             //var ekz = new EventHandler();
             //_serviceEventHandler.CreateServices();
-            return new JsonResult(_repo.GetService(1));
+
+            using (var context = new AppDbContext())
+            {
+                return new JsonResult(_repo.GetService(context, 1));
+            }
+
+
+
+                //return new JsonResult(_repo.GetService(1)); - БЫЛО
         }
 
-        [HttpPost]
-        public JsonResult Post()
-        {
-            //RepairService.Work();
-            //return new JsonResult("Work was successfully done");
-            return new JsonResult(_repo.GetService(1));
-        }
+        //[HttpPost]
+        //public JsonResult Post()
+        //{
+        //    //RepairService.Work();
+        //    //return new JsonResult("Work was successfully done");
+        //    return new JsonResult(_repo.GetService(1));
+        //}
 
         //public Fax(Service1 mm)
         //{

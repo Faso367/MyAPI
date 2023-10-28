@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Timers;
 using MyAPI.Data;
 using MyAPI.Models;
+using Microsoft.EntityFrameworkCore;
 //using MyAPI.Services.CreateServicesFolder;
 
 namespace MyAPI.Services
@@ -32,7 +33,7 @@ namespace MyAPI.Services
         private static bool servicesIsCreated = false;
         private static Service1 service1;
         private int structureEkzCount = 0;
-        
+        private static int count = 0;
 
         //private ICreateServices _createServices;
         //private Service1 _service1;
@@ -90,22 +91,22 @@ namespace MyAPI.Services
                 service1.Work1();
 
 
-                var task2 = Task.Run(async () => {
-                    while (true)
-                    {
-                        try
-                        {
-                            await UpdateDB();
-                        }
-                        catch
-                        {
-                            //super easy error handling
-                        }
-                        await Task.Delay(TimeSpan.FromSeconds(40));
-                    }
-                });
+            //    var task2 = Task.Run(async () => {
+            //        while (true)
+            //        {
+            //            try
+            //            {
+            //                await UpdateDB();
+            //            }
+            //            catch
+            //            {
+            //                //super easy error handling
+            //            }
+            //            await Task.Delay(TimeSpan.FromSeconds(40));
+            //        }
+            //    });
             }
-
+            
             else
             {
                 service1.Work1();
@@ -130,6 +131,9 @@ namespace MyAPI.Services
         //private void AddCounter(ref ServiceVariables s, Service service, DescriptionOfEventArgs e)
         private void AddCounter(ref Service service_db, DescriptionOfEventArgs e)
         {
+
+            count++;
+
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
@@ -165,20 +169,41 @@ namespace MyAPI.Services
                 service_db.Timer.Restart();
             }
 
+            if (count % 3 == 0 && count != 0)
+            {
+                UpdateDB();
+            }
+
             Console.WriteLine("Podpischik");
         }
 
-        private async Task UpdateDB()
-        //private void UpdateDB(object source, System.Timers.ElapsedEventArgs e)
+        //private async Task UpdateDB()
+        private void UpdateDB()
         {
+            using (var context = new AppDbContext())
+            {
+                //var user = _userRepository.Get(context, userId);
+                //user.IsPremiumUser = true;
+                //context.SaveChanges();
 
-            repository.UpdateService(service1_db_ekz);
-            //repository.UpdateService(service2_db_ekz); БЫЛО
-            //repository.UpdateService(service3_db_ekz); БЫЛО
+                repository.UpdateService(context, service1_db_ekz);
+                //repository.UpdateService(service2_db_ekz); БЫЛО
+                //repository.UpdateService(service3_db_ekz); БЫЛО
 
-            Console.WriteLine("Update");
+                Console.WriteLine("Update");
 
-            await repository.SaveChangesAsync();
+                //await repository.SaveChangesAsync();
+            }
+
+
+            // БЫЛО
+            //repository.UpdateService(service1_db_ekz);
+            ////repository.UpdateService(service2_db_ekz); БЫЛО
+            ////repository.UpdateService(service3_db_ekz); БЫЛО
+
+            //Console.WriteLine("Update");
+
+            //await repository.SaveChangesAsync();
         }
 
         //public void CreateServices()

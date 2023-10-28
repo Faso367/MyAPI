@@ -25,10 +25,12 @@ var services = builder.Services;
 
 
     services.AddMvc();
-    //services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Не использую норм БД, создаю только временную в памяти
-services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"));
+
+services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API")); //- БЫЛО
+
 //services.AddS
 
 //services.AddHostedService<ServiceEventHandler>();
@@ -41,6 +43,7 @@ services.AddTransient<IRepository, Repository>();   //БЫЛО
 //services.AddSingleton<>
 
 services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
+//services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
 //services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
 //services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
@@ -63,8 +66,12 @@ var app = builder.Build();
 // Позволяет создать Singleton объект (создаётся только 1 раз),
 // который является одноэлементным и имеет одноразовые зависимости (нап Transient repository)
 
-var scope = app.Services.CreateScope();
-var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+// БЫЛО
+//var scope = app.Services.CreateScope();
+//var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//ctx.Database.EnsureCreated();
+
+
 
 //var serviceEventHandler = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
 

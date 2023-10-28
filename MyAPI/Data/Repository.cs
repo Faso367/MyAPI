@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Hosting;
 using MyAPI.Models;
+using System;
 
 namespace MyAPI.Data
 {
@@ -9,8 +12,10 @@ namespace MyAPI.Data
 
         // Получаем контекст текущей сессии с БД
         public Repository(AppDbContext ctx)
+        //public Repository()
         {
             _ctx = ctx;
+            //_ctx = new AppDbContext();
         }
 
         // Добавляем запись в БД
@@ -20,10 +25,13 @@ namespace MyAPI.Data
         }
 
         // РАБОЧИЙ МЕТОД
-        public Service GetService(int id)
+        //public Service GetService(int id) - БЫЛО
+        public Service GetService(AppDbContext context, int id)
         {
             // Если полученный id совпадает с найденным в БД, то возвращаем (достаем) эту запись
-            return _ctx.Services.FirstOrDefault(p => p.Id == id);
+            //return _ctx.Services.FirstOrDefault(p => p.Id == id); - БЫЛО
+            var get = context.Services.FirstOrDefault(p => p.Id == id);
+            return get;
         }
 
         //public async Service GetService(int id)
@@ -44,12 +52,17 @@ namespace MyAPI.Data
         }
 
 
-        public void UpdateService(Service service)
+        
+        //public void UpdateService(Service service) - БЫЛО
+        public void UpdateService(AppDbContext context, Service service)
         {
             //service.UpdatedAt = DateTime.Now;
-            Console.WriteLine("UpdateService");
+            //_ctx.Services.Update(service); - БЫЛО
+            context.Services.Update(service);
+            context.SaveChanges();
 
-            _ctx.Services.Update(service);
+            var a = GetService(context, 1);
+            Console.WriteLine("UpdateService");
         }
 
         // Метод с подтверждением сохранения записи в БД
