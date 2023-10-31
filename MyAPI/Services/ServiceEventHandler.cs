@@ -5,6 +5,8 @@ using System.Timers;
 using MyAPI.Data;
 using MyAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using MyAPI.Services.Service2Folder;
+//using MyAPI.Services.Service3Folder;
 //using MyAPI.Services.CreateServicesFolder;
 
 namespace MyAPI.Services
@@ -32,6 +34,9 @@ namespace MyAPI.Services
         //private ServiceVariables s; 
         private static bool servicesIsCreated = false;
         private static Service1 service1;
+        private static Service2 service2;
+        //private static Service3 service3;
+
         private int structureEkzCount = 0;
         private static int count = 0;
 
@@ -72,44 +77,33 @@ namespace MyAPI.Services
                 CreateServices();
                 // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
                 //Service1 service1 = new Service1();
+
+                //var sp = new ServicePapaz();
+
+                //sp.NoticeFromService += ServiceHandler;
+                
+
                 service1 = new Service1();
                 service1.NoticeFromService += ServiceHandler;
-                
-                //var timer = new System.Timers.Timer();
-                ////timer.Interval = 60000; // Срабатывает раз в минуту
-                //timer.Interval = 20000;
-                //// Обновляем значения таймеров и статус в БД
-                //timer.Elapsed += UpdateDB;
-                ////timer.Elapsed += repository.UpdateService;
-                //timer.AutoReset = true;
+                //service1.NoticeFromService += Service1Handler;
 
-                //// Start the timer
-                //timer.Enabled = true;
+                service2 = new Service2();
+                service2.NoticeFromService += ServiceHandler;
+                //service2.NoticeFromService += Service2Handler;
+
+                //service3 = new Service3();
+                //service3.NoticeFromService += ServiceHandler;
 
                 servicesIsCreated = true;
                 // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
                 service1.Work1();
-
-
-            //    var task2 = Task.Run(async () => {
-            //        while (true)
-            //        {
-            //            try
-            //            {
-            //                await UpdateDB();
-            //            }
-            //            catch
-            //            {
-            //                //super easy error handling
-            //            }
-            //            await Task.Delay(TimeSpan.FromSeconds(40));
-            //        }
-            //    });
+                service2.Work2();
             }
             
             else
             {
                 service1.Work1();
+                service2.Work2();
             }
         }
 
@@ -127,6 +121,15 @@ namespace MyAPI.Services
                 AddCounter(ref service3_db_ekz, e);
         }
 
+        //private void Service1Handler(object sender, DescriptionOfEventArgs e)
+        //{
+        //        AddCounter(ref service1_db_ekz, e);
+        //}
+
+        //private void Service2Handler(object sender, DescriptionOfEventArgs e)
+        //{
+        //    AddCounter(ref service2_db_ekz, e);
+        //}
 
         //private void AddCounter(ref ServiceVariables s, Service service, DescriptionOfEventArgs e)
         private void AddCounter(ref Service service_db, DescriptionOfEventArgs e)
@@ -169,7 +172,7 @@ namespace MyAPI.Services
                 service_db.Timer.Restart();
             }
 
-            if (count % 3 == 0 && count != 0)
+            if (count % 6 == 0 && count != 0)
             {
                 UpdateDB();
             }
@@ -187,6 +190,8 @@ namespace MyAPI.Services
                 //context.SaveChanges();
 
                 repository.UpdateService(context, service1_db_ekz);
+                repository.UpdateService(context, service2_db_ekz);
+
                 //repository.UpdateService(service2_db_ekz); БЫЛО
                 //repository.UpdateService(service3_db_ekz); БЫЛО
 
@@ -246,7 +251,8 @@ namespace MyAPI.Services
                 isFirstTime = true,
                 Timer = new Stopwatch()
             };
-            service2_db_ekz = _service1_db_ekz;
+            service2_db_ekz = _service2_db_ekz;
+
             var _service3_db_ekz = new Service
             {
                 Id = 3,
