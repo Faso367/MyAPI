@@ -6,7 +6,7 @@ using MyAPI.Data;
 using MyAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using MyAPI.Services.Service2Folder;
-//using MyAPI.Services.Service3Folder;
+using MyAPI.Services.Service3Folder;
 //using MyAPI.Services.CreateServicesFolder;
 
 namespace MyAPI.Services
@@ -35,7 +35,7 @@ namespace MyAPI.Services
         private static bool servicesIsCreated = false;
         private static Service1 service1;
         private static Service2 service2;
-        //private static Service3 service3;
+        private static Service3 service3;
 
         private int structureEkzCount = 0;
         private static int count = 0;
@@ -91,6 +91,10 @@ namespace MyAPI.Services
                 service2.NoticeFromService += ServiceHandler;
                 //service2.NoticeFromService += Service2Handler;
 
+
+                service3 = new Service3();
+                service3.NoticeFromService += ServiceHandler;
+
                 //service3 = new Service3();
                 //service3.NoticeFromService += ServiceHandler;
 
@@ -98,12 +102,14 @@ namespace MyAPI.Services
                 // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
                 service1.Work1();
                 service2.Work2();
+                service3.Work3();
             }
             
             else
             {
                 service1.Work1();
                 service2.Work2();
+                service3.Work3();
             }
         }
 
@@ -172,7 +178,7 @@ namespace MyAPI.Services
                 service_db.Timer.Restart();
             }
 
-            if (count % 6 == 0 && count != 0)
+            if (count % 9 == 0 && count != 0)
             {
                 UpdateDB();
             }
@@ -191,6 +197,7 @@ namespace MyAPI.Services
 
                 repository.UpdateService(context, service1_db_ekz);
                 repository.UpdateService(context, service2_db_ekz);
+                repository.UpdateService(context, service3_db_ekz);
 
                 //repository.UpdateService(service2_db_ekz); БЫЛО
                 //repository.UpdateService(service3_db_ekz); БЫЛО

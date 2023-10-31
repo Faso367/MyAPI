@@ -18,15 +18,17 @@ namespace MyAPI.Services.Service1Folder
             Console.WriteLine("Service1 начал работу");
             StatusChange(new DescriptionOfEventArgs("Работает", 1));
             int x = 0;
-            for (int i = 500000; i < 0; i++)
-                x++;
+            Thread.Sleep(5000);
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
 
-            for (int i = 200000; i < 0; i++)
-                x++;
+            //for (int i = 500000; i < 0; i++)
+            //    x++;
             StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
 
-            for (int i = 500000; i < 0; i++)
-                x++;
+            Thread.Sleep(2000);
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
 
             StatusChange(new DescriptionOfEventArgs("Не работает", 1));
             Console.WriteLine("Service1 отработал");

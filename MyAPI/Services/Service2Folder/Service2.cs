@@ -14,18 +14,36 @@ namespace MyAPI.Services.Service2Folder
 
         public void Work2()
         {
+            //Console.WriteLine("Service2 начал работу");
+            //StatusChange(new DescriptionOfEventArgs("Работает", 2));
+            //int x = 0;
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
+
+            //for (int i = 500000; i < 0; i++)
+            //    x++;
+            //StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 2));
+
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
+
+            //StatusChange(new DescriptionOfEventArgs("Не работает", 2));
+            //Console.WriteLine("Service2 отработал");
+
             Console.WriteLine("Service2 начал работу");
             StatusChange(new DescriptionOfEventArgs("Работает", 2));
             int x = 0;
-            for (int i = 500000; i < 0; i++)
-                x++;
+            Thread.Sleep(4000);
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
 
-            for (int i = 200000; i < 0; i++)
-                x++;
+            //for (int i = 500000; i < 0; i++)
+            //    x++;
             StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 2));
 
-            for (int i = 500000; i < 0; i++)
-                x++;
+            Thread.Sleep(1000);
+            //for (int i = 1000000; i < 0; i++)
+            //    x++;
 
             StatusChange(new DescriptionOfEventArgs("Не работает", 2));
             Console.WriteLine("Service2 отработал");
