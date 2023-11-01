@@ -46,7 +46,7 @@ namespace MyAPI.Controllers.Main
             using (var context = new AppDbContext())
             {
                 //return new JsonResult(_repo.GetService(context, 1));
-                return new JsonResult(_repo.GetAllServices());
+                return new JsonResult(_repo.GetAllServices(context));
             }
 
 

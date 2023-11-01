@@ -13,25 +13,24 @@ namespace MyAPI.Services.Service1Folder
             //_SP = SP;
         }
 
-        public void Work1()
+        public async Task Work1()
         {
-            Console.WriteLine("Service1 начал работу");
-            StatusChange(new DescriptionOfEventArgs("Работает", 1));
-            int x = 0;
-            Thread.Sleep(5000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
+            //while (true)
+            //{
+                Console.WriteLine("Service1 начал работу");
+                StatusChange(new DescriptionOfEventArgs("Работает", 1));
 
-            //for (int i = 500000; i < 0; i++)
-            //    x++;
-            StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
+                //Thread.Sleep(5000);
+                await Task.Delay(5000);
 
-            Thread.Sleep(2000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
+                StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 1));
 
-            StatusChange(new DescriptionOfEventArgs("Не работает", 1));
-            Console.WriteLine("Service1 отработал");
+                //Thread.Sleep(2000);
+                await Task.Delay(2000);
+
+                StatusChange(new DescriptionOfEventArgs("Не работает", 1));
+                Console.WriteLine("Service1 отработал");
+            //}
         }
     }
 }

@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using MyAPI.Data;
 using MyAPI.Services;
 using System.Reflection.Emit;
+using Microsoft.Extensions.DependencyInjection;
+using static System.Net.Mime.MediaTypeNames;
+using System;
 //using MyAPI.Services.CreateServicesFolder;
 //internal class Program
 //{
@@ -29,8 +32,10 @@ var services = builder.Services;
 
 // Не использую норм БД, создаю только временную в памяти
 
-services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API")); //- БЫЛО
+//services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API")); //- БЫЛО
 
+//services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"), ServiceLifetime.Scoped);
+services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"));
 //services.AddS
 
 //services.AddHostedService<ServiceEventHandler>();
@@ -42,11 +47,16 @@ services.AddTransient<IRepository, Repository>();   //БЫЛО
 //services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
 //services.AddSingleton<>
 
+//var a = services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
+
 services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
-//services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
 //services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
 //services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
+
+
+//services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
+
 var app = builder.Build();
 
     // Configure the HTTP request pipeline.
@@ -63,14 +73,51 @@ var app = builder.Build();
     app.MapControllers();
 
 
+
 // Позволяет создать Singleton объект (создаётся только 1 раз),
 // который является одноэлементным и имеет одноразовые зависимости (нап Transient repository)
 
 // БЫЛО
+
+
+//I build a new service provider from the services collection
+//using (ServiceProvider serviceProvider = services.BuildServiceProvider())
+//{
+//    // Review the FormMain Singleton.
+//    var formMain = serviceProvider.GetRequiredService<ServiceEventHandler>();
+//    app.Run(formMain);
+//}
+
+
+//app.Run(async context =>
+//{
+//    var timeService = app.Services.GetService<ITimeService>();
+//    await context.Response.WriteAsync($"Time: {timeService?.GetTime()}");
+//});
+
+
 //var scope = app.Services.CreateScope();
+//var ctx = scope.ServiceProvider.GetRequiredService<ServiceEventHandler>(); БЫЛО
+
+//var ctx = app.Services.GetRequiredService<ServiceEventHandler>();
+
+//var scope = app.Services.CreateAsyncScope();
+var scope = app.Services.CreateScope();
+var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+var serv = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
+
+serv.StartServices();
+
+app.Run();
+
+
+//var scope = app.Services.CreateAsyncScope();
+
 //var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 //ctx.Database.EnsureCreated();
 
+//var ctx = scope.ServiceProvider.GetRequiredService<ServiceEventHandler>();
 
 
 //var serviceEventHandler = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
@@ -82,6 +129,6 @@ var app = builder.Build();
 //ctx.Database.EnsureCreated();
 //var a = new CreateServices(IRepository repo);
 
-app.Run();
+
 //    }
 //}

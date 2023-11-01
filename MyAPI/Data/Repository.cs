@@ -46,13 +46,19 @@ namespace MyAPI.Data
         //    return false;
         //}
 
-        public List<Service> GetAllServices()
+        //public List<Service> GetAllServices()
+        //{
+        //    return _ctx.Services.ToList();
+        //}
+
+        public List<Service> GetAllServices(AppDbContext context)
         {
-            return _ctx.Services.ToList();
+            var get = context.Services.ToList();
+            return get;
+            //return _ctx.Services.ToList();
         }
 
 
-        
         //public void UpdateService(Service service) - БЫЛО
         public void UpdateService(AppDbContext context, Service service)
         {

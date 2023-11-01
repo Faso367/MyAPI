@@ -12,7 +12,7 @@ namespace MyAPI.Services.Service2Folder
             //_SP = SP;
         }
 
-        public void Work2()
+        public async Task Work2()
         {
             //Console.WriteLine("Service2 начал работу");
             //StatusChange(new DescriptionOfEventArgs("Работает", 2));
@@ -30,23 +30,23 @@ namespace MyAPI.Services.Service2Folder
             //StatusChange(new DescriptionOfEventArgs("Не работает", 2));
             //Console.WriteLine("Service2 отработал");
 
-            Console.WriteLine("Service2 начал работу");
-            StatusChange(new DescriptionOfEventArgs("Работает", 2));
-            int x = 0;
-            Thread.Sleep(4000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
+            //while (true)
+            //{
 
-            //for (int i = 500000; i < 0; i++)
-            //    x++;
-            StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 2));
+                Console.WriteLine("Service2 начал работу");
+                StatusChange(new DescriptionOfEventArgs("Работает", 2));
 
-            Thread.Sleep(1000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
+                //Thread.Sleep(4000);
+                await Task.Delay(4000);
 
-            StatusChange(new DescriptionOfEventArgs("Не работает", 2));
-            Console.WriteLine("Service2 отработал");
+                StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 2));
+
+                //Thread.Sleep(1000);
+                await Task.Delay(1000);
+
+                StatusChange(new DescriptionOfEventArgs("Не работает", 2));
+                Console.WriteLine("Service2 отработал");
+            //}
         }
     }
 }

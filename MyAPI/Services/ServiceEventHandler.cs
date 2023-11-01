@@ -27,7 +27,7 @@ namespace MyAPI.Services
         //private bool isFirstTime = true;
         private static Dictionary<int, string> StatusStatistic = new Dictionary<int, string>();
         private IRepository repository;
-         
+
         //private Service service1_db_ekz, service2_db_ekz, service3_db_ekz; // БЫЛО
         private static Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
         //private ServiceVariables s1, s2, s3;
@@ -61,56 +61,56 @@ namespace MyAPI.Services
         public ServiceEventHandler(IRepository _repository)
         {
 
-           // using (var scope = Services.CreateScope())
+            // using (var scope = Services.CreateScope())
             //{
             //    var myScopedService = scope.GetRequiredService<IScopedService>();
 
-                repository = _repository;
+            repository = _repository;
 
             //Console.WriteLine("EventHandler");
 
             //_createServices = createServices;
 
 
-            if (servicesIsCreated == false)
-            {
-                CreateServices();
-                // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
-                //Service1 service1 = new Service1();
+            //if (servicesIsCreated == false)
+            //{
+            //    CreateServices();
+            //    // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
+            //    //Service1 service1 = new Service1();
 
-                //var sp = new ServicePapaz();
+            //    //var sp = new ServicePapaz();
 
-                //sp.NoticeFromService += ServiceHandler;
-                
-
-                service1 = new Service1();
-                service1.NoticeFromService += ServiceHandler;
-                //service1.NoticeFromService += Service1Handler;
-
-                service2 = new Service2();
-                service2.NoticeFromService += ServiceHandler;
-                //service2.NoticeFromService += Service2Handler;
+            //    //sp.NoticeFromService += ServiceHandler;
 
 
-                service3 = new Service3();
-                service3.NoticeFromService += ServiceHandler;
+            //    service1 = new Service1();
+            //    service1.NoticeFromService += ServiceHandler;
+            //    //service1.NoticeFromService += Service1Handler;
 
-                //service3 = new Service3();
-                //service3.NoticeFromService += ServiceHandler;
+            //    service2 = new Service2();
+            //    service2.NoticeFromService += ServiceHandler;
+            //    //service2.NoticeFromService += Service2Handler;
 
-                servicesIsCreated = true;
-                // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
-                service1.Work1();
-                service2.Work2();
-                service3.Work3();
-            }
-            
-            else
-            {
-                service1.Work1();
-                service2.Work2();
-                service3.Work3();
-            }
+
+            //    service3 = new Service3();
+            //    service3.NoticeFromService += ServiceHandler;
+
+            //    //service3 = new Service3();
+            //    //service3.NoticeFromService += ServiceHandler;
+
+            //    servicesIsCreated = true;
+            //    // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
+            //    await service1.Work1();
+            //    service2.Work2();
+            //    service3.Work3();
+            //}
+
+            //else
+            //{
+            //    service1.Work1();
+            //    service2.Work2();
+            //    service3.Work3();
+            //}
         }
 
 
@@ -146,7 +146,7 @@ namespace MyAPI.Services
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
-                
+
                 //service_db.Timer = new Stopwatch();
                 service_db.Timer.Start();
                 service_db.isFirstTime = false;
@@ -231,8 +231,8 @@ namespace MyAPI.Services
                 Name = "Service1",
                 Description = "Service1Description",
                 WorkTime = 0,
-                DownTime= 0,
-                BadWorkTime= 0,
+                DownTime = 0,
+                BadWorkTime = 0,
                 UpdatedAt = DateTime.Now,
                 CreatedAt = DateTime.Now,
                 Status = "DontWork",
@@ -277,20 +277,46 @@ namespace MyAPI.Services
             service3_db_ekz = _service3_db_ekz;
 
             repository.AddService(_service1_db_ekz);
-
             repository.AddService(_service2_db_ekz);
             repository.AddService(_service3_db_ekz);
 
-            await repository.SaveChangesAsync();
+            //await repository.SaveChangesAsync();
 
-            int y = 0;
-            for (int i = 0; i < 1000; i++)
-                y++;
+            //int y = 0;
+            //for (int i = 0; i < 1000; i++)
+            //    y++;
 
             if (await repository.SaveChangesAsync())
                 return true;
 
             return false;
+        }
+
+
+        public async void StartServices()
+        {
+            if (await CreateServices())
+                Console.WriteLine("Сервисы созданы успешно");
+
+            service1 = new Service1();
+            service1.NoticeFromService += ServiceHandler;
+
+            service2 = new Service2();
+            service2.NoticeFromService += ServiceHandler;
+
+            service3 = new Service3();
+            service3.NoticeFromService += ServiceHandler;
+
+            // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
+
+            //for(int i = 0; i < 10; i ++)
+            //{
+            while(true) { 
+                await service1.Work1();
+                await service2.Work2();
+                await service3.Work3();
+            }
+
         }
     }
 }

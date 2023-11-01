@@ -10,7 +10,7 @@
             //_SP = SP;
         }
 
-        public void Work3()
+        public async Task Work3()
         {
             //Console.WriteLine("Service3 начал работу");
             //StatusChange(new DescriptionOfEventArgs("Работает", 3));
@@ -27,24 +27,21 @@
 
             //StatusChange(new DescriptionOfEventArgs("Не работает", 3));
             //Console.WriteLine("Service3 отработал");
+            //while (true)
+            //{
+                Console.WriteLine("Service3 начал работу");
+                StatusChange(new DescriptionOfEventArgs("Работает", 3));
+                //Thread.Sleep(3000); //БЫЛО
+                await Task.Delay(3000);
 
-            Console.WriteLine("Service3 начал работу");
-            StatusChange(new DescriptionOfEventArgs("Работает", 3));
-            int x = 0;
-            Thread.Sleep(3000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
+                StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 3));
 
-            //for (int i = 500000; i < 0; i++)
-            //    x++;
-            StatusChange(new DescriptionOfEventArgs("Нестабильно работает", 3));
+                //Thread.Sleep(2000);  //БЫЛО
+                await Task.Delay(2000);
 
-            Thread.Sleep(2000);
-            //for (int i = 1000000; i < 0; i++)
-            //    x++;
-
-            StatusChange(new DescriptionOfEventArgs("Не работает", 3));
-            Console.WriteLine("Service3 отработал");
+                StatusChange(new DescriptionOfEventArgs("Не работает", 3));
+                Console.WriteLine("Service3 отработал");
+            //}
         }
     }
 }
