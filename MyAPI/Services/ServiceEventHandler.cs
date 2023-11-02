@@ -7,6 +7,7 @@ using MyAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using MyAPI.Services.Service2Folder;
 using MyAPI.Services.Service3Folder;
+using System.Numerics;
 //using MyAPI.Services.CreateServicesFolder;
 
 namespace MyAPI.Services
@@ -151,11 +152,24 @@ namespace MyAPI.Services
                 service_db.Timer.Start();
                 service_db.isFirstTime = false;
             }
-            service_db.Status = e.Message;
+            //service_db.Status = "777";
+            var zapis = e.Message + ": " + DateTimeOffset.Now.ToString() + ", ";
+
+            service_db.StatusHistory += zapis;
+
+            //service_db.StatusHistory.Add(zapis);
+
+            //var statusRecord = new History(zapis);
+
+            //History pl3 = new History {Record = zapis };
+
+            //service_db.StatusRecords.Add(new History { Record = zapis });
+
             //Console.WriteLine(e.Message);
             if (e.Message == "Не работает")
             {
                 service_db.DownTime += service_db.Timer.Elapsed.Seconds;
+                
                 //s.DownTime += s.sw.
                 //s.Status = e.Message;
                 //sw.Restart();
@@ -177,6 +191,7 @@ namespace MyAPI.Services
                 //service_db.Timer.Reset();
                 service_db.Timer.Restart();
             }
+            
 
             if (count % 9 == 0 && count != 0)
             {
@@ -191,29 +206,23 @@ namespace MyAPI.Services
         {
             using (var context = new AppDbContext())
             {
-                //var user = _userRepository.Get(context, userId);
-                //user.IsPremiumUser = true;
-                //context.SaveChanges();
 
                 repository.UpdateService(context, service1_db_ekz);
                 repository.UpdateService(context, service2_db_ekz);
                 repository.UpdateService(context, service3_db_ekz);
 
-                //repository.UpdateService(service2_db_ekz); БЫЛО
-                //repository.UpdateService(service3_db_ekz); БЫЛО
-
                 Console.WriteLine("Update");
 
-                //await repository.SaveChangesAsync();
+                context.SaveChanges();
             }
 
 
             // БЫЛО
             //repository.UpdateService(service1_db_ekz);
-            ////repository.UpdateService(service2_db_ekz); БЫЛО
-            ////repository.UpdateService(service3_db_ekz); БЫЛО
+            //repository.UpdateService(service2_db_ekz);
+            //repository.UpdateService(service3_db_ekz);
 
-            //Console.WriteLine("Update");
+            Console.WriteLine("Update");
 
             //await repository.SaveChangesAsync();
         }
@@ -233,11 +242,15 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                UpdatedAt = DateTime.Now,
-                CreatedAt = DateTime.Now,
+                //UpdatedAt = DateTime.Now,
+                //CreatedAt = DateTime.Now,
+                UpdatedAt = DateTimeOffset.Now,
+                CreatedAt = DateTimeOffset.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch()
+                Timer = new Stopwatch(),
+                //StatusHistory = new List<History>()
+                StatusHistory = ""
 
             };
             service1_db_ekz = _service1_db_ekz;
@@ -252,11 +265,14 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                UpdatedAt = DateTime.Now,
-                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTimeOffset.Now,
+                CreatedAt = DateTimeOffset.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch()
+                Timer = new Stopwatch(),
+                //StatusHistory = new List<string>()
+                StatusHistory = ""
+                //StatusHistory = new List<History>()
             };
             service2_db_ekz = _service2_db_ekz;
 
@@ -268,18 +284,27 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                UpdatedAt = DateTime.Now,
-                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTimeOffset.Now,
+                CreatedAt = DateTimeOffset.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch()
+                Timer = new Stopwatch(),
+                //StatusHistory = new List<string>()
+                StatusHistory = ""
+                //StatusHistory = new List<History>()
             };
             service3_db_ekz = _service3_db_ekz;
 
-            repository.AddService(_service1_db_ekz);
-            repository.AddService(_service2_db_ekz);
-            repository.AddService(_service3_db_ekz);
+            using (var context = new AppDbContext())
+            {
 
+
+                repository.AddService(_service1_db_ekz);
+                repository.AddService(_service2_db_ekz);
+                repository.AddService(_service3_db_ekz);
+
+                context.SaveChanges();
+            }
             //await repository.SaveChangesAsync();
 
             //int y = 0;

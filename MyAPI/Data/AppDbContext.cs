@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyAPI.Models;
+using System.Numerics;
 
 namespace MyAPI.Data
 {
@@ -15,12 +16,15 @@ namespace MyAPI.Data
 (DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseInMemoryDatabase(databaseName: "db_API");
+            //optionsBuilder.EnableSensitiveDataLogging;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<Service>().OwnsOne(x => x.Timer);
+            //modelBuilder.Entity<Service>().OwnsOne(x => x.StatusHistory);
+
             //modelBuilder
             //    .Entity<Service>(
             //        eb =>
@@ -34,5 +38,6 @@ namespace MyAPI.Data
         }
 
         public DbSet<Service> Services { get; set; }
+        //public DbSet<History> StatusHistory { get; set; }
     }
 }

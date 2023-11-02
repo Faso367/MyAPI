@@ -8,6 +8,7 @@ using System.Reflection.Emit;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Net.Mime.MediaTypeNames;
 using System;
+using Microsoft.Extensions.Options;
 //using MyAPI.Services.CreateServicesFolder;
 //internal class Program
 //{
@@ -34,25 +35,38 @@ var services = builder.Services;
 
 //services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API")); //- ашкн
 
-//services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"), ServiceLifetime.Scoped);
-services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"));
+services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("db_API"), ServiceLifetime.Scoped);
+//services.AddDbContext<AppDbContext>(options =>
+//{
+//    options.UseInMemoryDatabase("db_API")
+//    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+//}
+//);
 //services.AddS
 
 //services.AddHostedService<ServiceEventHandler>();
 //services.Add
 
-services.AddTransient<IRepository, Repository>();   //ашкн
+//services.AddTransient<IRepository, Repository>();   //ашкн
 
-//services.AddScoped<IRepository, Repository>();   // ярюкн
+services.AddTransient<IRepository, Repository>();   // ярюкн
+
 //services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
 //services.AddSingleton<>
 
 //var a = services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
-services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
+//services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
 //services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
-//services.AddSingleton<IServiceEventHandler, ServiceEventHandler>();
+var context = new AppDbContext();
+var repo = new Repository(context);
+
+var api = new ServiceEventHandler(repo);
+api.StartServices();
+//builder.Services.AddSingleton<IServiceEventHandler>(api);
+
+services.AddTransient<IServiceEventHandler, ServiceEventHandler>();
 
 
 //services.AddScoped<IServiceEventHandler, ServiceEventHandler>();
@@ -101,13 +115,14 @@ var app = builder.Build();
 
 //var ctx = app.Services.GetRequiredService<ServiceEventHandler>();
 
+//-----------------------------------
 //var scope = app.Services.CreateAsyncScope();
-var scope = app.Services.CreateScope();
-var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//var scope = app.Services.CreateAsyncScope();
+//var ctx = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-var serv = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
+//var serv = scope.ServiceProvider.GetRequiredService<IServiceEventHandler>();
 
-serv.StartServices();
+//serv.StartServices();
 
 app.Run();
 

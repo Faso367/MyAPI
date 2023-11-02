@@ -43,15 +43,20 @@ namespace MyAPI.Controllers.Main
             //var ekz = new EventHandler();
             //_serviceEventHandler.CreateServices();
 
+            //var get = _repo.GetAllServices();
+
             using (var context = new AppDbContext())
             {
                 //return new JsonResult(_repo.GetService(context, 1));
-                return new JsonResult(_repo.GetAllServices(context));
+
+                //return new JsonResult(_repo.GetAllServices(context));
+
+                return new JsonResult(_repo.GetServicesInfo(context));
             }
 
+            //return new JsonResult(_repo.GetAllServices());
 
-
-                //return new JsonResult(_repo.GetService(1)); - БЫЛО
+            //return new JsonResult(_repo.GetService(1)); - БЫЛО
         }
 
         //[HttpPost]
