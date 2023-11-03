@@ -7,7 +7,6 @@
 
         // Метод для уведомления подписчиков
         public void StatusChange(DescriptionOfEventArgs e)
-        //public void StatusChange(DescriptionOfEventArgs e)
         {
             // Сохраняем ссылку на делегат во временной переменной, для обеспечения безопасности потоков
             EventHandler<DescriptionOfEventArgs> temp = Volatile.Read(ref NoticeFromService);

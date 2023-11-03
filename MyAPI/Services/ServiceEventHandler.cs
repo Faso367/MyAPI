@@ -14,104 +14,16 @@ namespace MyAPI.Services
 {
     public class ServiceEventHandler : IServiceEventHandler
     {
-        //private Service1 _service1;
-
-
-        //public EventHandler(Service1 service1)
-        //{
-        //    //_service1 = service1;
-        //    service1.NoticeFromService += ServiceMsg;
-        //}
-
-        //private Stopwatch sw = new Stopwatch();
-        //private static System.Timers.Timer timer;
-        //private bool isFirstTime = true;
-        private static Dictionary<int, string> StatusStatistic = new Dictionary<int, string>();
         private IRepository repository;
-
-        //private Service service1_db_ekz, service2_db_ekz, service3_db_ekz; // БЫЛО
         private static Service service1_db_ekz, service2_db_ekz, service3_db_ekz;
-        //private ServiceVariables s1, s2, s3;
-        //private ServiceVariables s; 
-        private static bool servicesIsCreated = false;
         private static Service1 service1;
         private static Service2 service2;
         private static Service3 service3;
-
-        private int structureEkzCount = 0;
         private static int count = 0;
-
-        //private ICreateServices _createServices;
-        //private Service1 _service1;
-
-        // Эта структура нужна для временного хранения данных
-        //struct ServiceVariables
-        //{
-        //    public bool isFirstTime = true;
-        //    public Stopwatch? sw = new Stopwatch();
-        //    public int DownTime = 0;
-        //    public int WorkTime = 0;
-        //    public int BadWorkTime = 0;
-        //    public string? Status;
-
-        //    public ServiceVariables() {
-        //        //isFirstTime = true;
-        //    }
-        //}
 
         public ServiceEventHandler(IRepository _repository)
         {
-
-            // using (var scope = Services.CreateScope())
-            //{
-            //    var myScopedService = scope.GetRequiredService<IScopedService>();
-
             repository = _repository;
-
-            //Console.WriteLine("EventHandler");
-
-            //_createServices = createServices;
-
-
-            //if (servicesIsCreated == false)
-            //{
-            //    CreateServices();
-            //    // НАДО ЗАПИЛИТЬ ИНТЕРФЕЙС
-            //    //Service1 service1 = new Service1();
-
-            //    //var sp = new ServicePapaz();
-
-            //    //sp.NoticeFromService += ServiceHandler;
-
-
-            //    service1 = new Service1();
-            //    service1.NoticeFromService += ServiceHandler;
-            //    //service1.NoticeFromService += Service1Handler;
-
-            //    service2 = new Service2();
-            //    service2.NoticeFromService += ServiceHandler;
-            //    //service2.NoticeFromService += Service2Handler;
-
-
-            //    service3 = new Service3();
-            //    service3.NoticeFromService += ServiceHandler;
-
-            //    //service3 = new Service3();
-            //    //service3.NoticeFromService += ServiceHandler;
-
-            //    servicesIsCreated = true;
-            //    // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
-            //    await service1.Work1();
-            //    service2.Work2();
-            //    service3.Work3();
-            //}
-
-            //else
-            //{
-            //    service1.Work1();
-            //    service2.Work2();
-            //    service3.Work3();
-            //}
         }
 
 
@@ -128,17 +40,6 @@ namespace MyAPI.Services
                 AddCounter(ref service3_db_ekz, e);
         }
 
-        //private void Service1Handler(object sender, DescriptionOfEventArgs e)
-        //{
-        //        AddCounter(ref service1_db_ekz, e);
-        //}
-
-        //private void Service2Handler(object sender, DescriptionOfEventArgs e)
-        //{
-        //    AddCounter(ref service2_db_ekz, e);
-        //}
-
-        //private void AddCounter(ref ServiceVariables s, Service service, DescriptionOfEventArgs e)
         private void AddCounter(ref Service service_db, DescriptionOfEventArgs e)
         {
 
@@ -147,15 +48,20 @@ namespace MyAPI.Services
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
-
-                //service_db.Timer = new Stopwatch();
                 service_db.Timer.Start();
                 service_db.isFirstTime = false;
             }
             //service_db.Status = "777";
-            var zapis = e.Message + ": " + DateTimeOffset.Now.ToString() + ", ";
+            //var zapis = e.Message + ": " + DateTimeOffset.Now.ToString() + ", ";
 
-            service_db.StatusHistory += zapis;
+            var new_zapis = e.Message + ": " + DateTimeOffset.Now.ToString();
+
+            //service_db.StatusHistory += zapis;
+
+            //var record = new History(service_db.Id, new_zapis);
+            var record = new History(new_zapis);
+            //record.Record = zapis;
+            service_db.StatusHistory.Add(record);
 
             //service_db.StatusHistory.Add(zapis);
 
@@ -169,66 +75,56 @@ namespace MyAPI.Services
             if (e.Message == "Не работает")
             {
                 service_db.DownTime += service_db.Timer.Elapsed.Seconds;
-                
-                //s.DownTime += s.sw.
-                //s.Status = e.Message;
-                //sw.Restart();
-
-                //service_db.Timer.Reset();
                 service_db.Timer.Restart();
-                //Change();
             }
             else if (e.Message == "Работает")
             {
                 service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
-                //service_db.Timer.Reset();
                 service_db.Timer.Restart();
             }
 
             else if (e.Message == "Нестабильно работает")
             {
                 service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
-                //service_db.Timer.Reset();
                 service_db.Timer.Restart();
             }
             
-
             if (count % 9 == 0 && count != 0)
             {
                 UpdateDB();
+                //if (await UpdateDB())
+                //    Console.WriteLine("База данных успешно обновлена");
+                //else Console.WriteLine("При обновлении базы данных произошла ошибка");
             }
-
-            Console.WriteLine("Podpischik");
         }
 
-        //private async Task UpdateDB()
+        //private async Task<bool> UpdateDB()
         private void UpdateDB()
         {
-            using (var context = new AppDbContext())
-            {
 
-                repository.UpdateService(context, service1_db_ekz);
-                repository.UpdateService(context, service2_db_ekz);
-                repository.UpdateService(context, service3_db_ekz);
-
-                Console.WriteLine("Update");
-
-                context.SaveChanges();
-            }
-
-
+            repository.UpdateService(service1_db_ekz);
+            repository.UpdateService(service2_db_ekz);
+            repository.UpdateService(service3_db_ekz);
             // БЫЛО
-            //repository.UpdateService(service1_db_ekz);
-            //repository.UpdateService(service2_db_ekz);
-            //repository.UpdateService(service3_db_ekz);
+            //using (var context = new AppDbContext())
+            //{
 
-            Console.WriteLine("Update");
+            //    repository.UpdateService(context, service1_db_ekz);
+            //    repository.UpdateService(context, service2_db_ekz);
+            //    repository.UpdateService(context, service3_db_ekz);
+
+            //    context.SaveChanges();
+            //}
+            //SaveChanges();
+            //if (await repository.SaveChangesAsync())
 
             //await repository.SaveChangesAsync();
+            //if (await repository.SaveChangesAsync())
+            //    return true;
+
+            //return false;
         }
 
-        //public void CreateServices()
-        //public async void CreateServices()
         public async Task<bool> CreateServices()
         {
 
@@ -249,8 +145,8 @@ namespace MyAPI.Services
                 Status = "DontWork",
                 isFirstTime = true,
                 Timer = new Stopwatch(),
-                //StatusHistory = new List<History>()
-                StatusHistory = ""
+                StatusHistory = new List<History>()
+                //StatusHistory = ""
 
             };
             service1_db_ekz = _service1_db_ekz;
@@ -271,8 +167,8 @@ namespace MyAPI.Services
                 isFirstTime = true,
                 Timer = new Stopwatch(),
                 //StatusHistory = new List<string>()
-                StatusHistory = ""
-                //StatusHistory = new List<History>()
+                //StatusHistory = ""
+                StatusHistory = new List<History>()
             };
             service2_db_ekz = _service2_db_ekz;
 
@@ -290,26 +186,20 @@ namespace MyAPI.Services
                 isFirstTime = true,
                 Timer = new Stopwatch(),
                 //StatusHistory = new List<string>()
-                StatusHistory = ""
-                //StatusHistory = new List<History>()
+                //StatusHistory = ""
+                StatusHistory = new List<History>()
             };
             service3_db_ekz = _service3_db_ekz;
 
-            using (var context = new AppDbContext())
-            {
-
-
+            //using (var context = new AppDbContext())
+            //{
                 repository.AddService(_service1_db_ekz);
                 repository.AddService(_service2_db_ekz);
                 repository.AddService(_service3_db_ekz);
 
-                context.SaveChanges();
-            }
-            //await repository.SaveChangesAsync();
-
-            //int y = 0;
-            //for (int i = 0; i < 1000; i++)
-            //    y++;
+            //repository.SaveCh
+              //  context.SaveChanges();
+            //}
 
             if (await repository.SaveChangesAsync())
                 return true;
@@ -333,9 +223,6 @@ namespace MyAPI.Services
             service3.NoticeFromService += ServiceHandler;
 
             // Вызываю позже (а не в конструкторе класса Service1), тк метод должен быть вызван после подписки на событие
-
-            //for(int i = 0; i < 10; i ++)
-            //{
             while(true) { 
                 await service1.Work1();
                 await service2.Work2();
@@ -345,15 +232,4 @@ namespace MyAPI.Services
         }
     }
 }
-
-        
-
-        // Этот метод может выполняться для отмены регистрации объекта Fax
-        // в качестве получтеля уведомлений о событии NewMail
-        //public void Unregister(Service1 mm)
-        //{
-        //    // Отменить регистрацию на уведомление о событии NewMail объекта
-        //    Service1.mm.NewMail -= FaxMsg;
-        //}
-    
 
