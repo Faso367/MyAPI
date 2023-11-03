@@ -23,7 +23,9 @@ namespace MyAPI.Models
         public int? WorkTime { get; set; }
         public int? BadWorkTime { get; set; }
         public int? DownTime { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? UpdatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
+        //public DateTimeOffset CreatedAt { get; set; }
+        //public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

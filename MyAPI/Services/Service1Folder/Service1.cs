@@ -17,7 +17,9 @@ namespace MyAPI.Services.Service1Folder
         {
             //while (true)
             //{
-                Console.WriteLine("Service1 начал работу");
+            //await Task.Delay(2000);
+
+            Console.WriteLine("Service1 начал работу");
                 StatusChange(new DescriptionOfEventArgs("Работает", 1));
 
                 //Thread.Sleep(5000);

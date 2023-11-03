@@ -32,8 +32,9 @@ namespace MyAPI.Services.Service2Folder
 
             //while (true)
             //{
+            //await Task.Delay(1500);
 
-                Console.WriteLine("Service2 начал работу");
+            Console.WriteLine("Service2 начал работу");
                 StatusChange(new DescriptionOfEventArgs("Работает", 2));
 
                 //Thread.Sleep(4000);

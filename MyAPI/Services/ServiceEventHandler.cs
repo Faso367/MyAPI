@@ -45,23 +45,21 @@ namespace MyAPI.Services
 
             count++;
 
+
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
                 service_db.Timer.Start();
                 service_db.isFirstTime = false;
             }
-            //service_db.Status = "777";
-            //var zapis = e.Message + ": " + DateTimeOffset.Now.ToString() + ", ";
-
-            var new_zapis = e.Message + ": " + DateTimeOffset.Now.ToString();
-
-            //service_db.StatusHistory += zapis;
-
-            //var record = new History(service_db.Id, new_zapis);
+            // Чтобы отсчёт времени начался с момента получения первого сообщения, а не
+            //if (count == 2)
+            //    service_db.Timer.Start();
+            service_db.Status = e.Message;
+            var new_zapis = e.Message + ": " + DateTime.Now.ToString();
             var record = new History(new_zapis);
-            //record.Record = zapis;
             service_db.StatusHistory.Add(record);
+
 
             //service_db.StatusHistory.Add(zapis);
 
@@ -75,20 +73,27 @@ namespace MyAPI.Services
             if (e.Message == "Не работает")
             {
                 service_db.DownTime += service_db.Timer.Elapsed.Seconds;
-                service_db.Timer.Restart();
+
+                //if (count != 1)
+                    service_db.Timer.Restart();
             }
             else if (e.Message == "Работает")
             {
                 service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
-                service_db.Timer.Restart();
+                //if (count != 1)
+                    service_db.Timer.Restart();
             }
 
             else if (e.Message == "Нестабильно работает")
             {
                 service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
-                service_db.Timer.Restart();
+                //if (count != 1)
+                    service_db.Timer.Restart();
             }
             
+            if (count == 2)
+                service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
+
             if (count % 9 == 0 && count != 0)
             {
                 UpdateDB();
@@ -138,10 +143,10 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                //UpdatedAt = DateTime.Now,
-                //CreatedAt = DateTime.Now,
-                UpdatedAt = DateTimeOffset.Now,
-                CreatedAt = DateTimeOffset.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
+                //UpdatedAt = DateTimeOffset.Now,
+                //CreatedAt = DateTimeOffset.Now,
                 Status = "DontWork",
                 isFirstTime = true,
                 Timer = new Stopwatch(),
@@ -161,8 +166,8 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                UpdatedAt = DateTimeOffset.Now,
-                CreatedAt = DateTimeOffset.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 Status = "DontWork",
                 isFirstTime = true,
                 Timer = new Stopwatch(),
@@ -180,8 +185,8 @@ namespace MyAPI.Services
                 WorkTime = 0,
                 DownTime = 0,
                 BadWorkTime = 0,
-                UpdatedAt = DateTimeOffset.Now,
-                CreatedAt = DateTimeOffset.Now,
+                UpdatedAt = DateTime.Now,
+                CreatedAt = DateTime.Now,
                 Status = "DontWork",
                 isFirstTime = true,
                 Timer = new Stopwatch(),

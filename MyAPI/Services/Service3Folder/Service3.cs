@@ -29,7 +29,9 @@
             //Console.WriteLine("Service3 отработал");
             //while (true)
             //{
-                Console.WriteLine("Service3 начал работу");
+            //await Task.Delay(2000);
+
+            Console.WriteLine("Service3 начал работу");
                 StatusChange(new DescriptionOfEventArgs("Работает", 3));
                 //Thread.Sleep(3000); //БЫЛО
                 await Task.Delay(3000);
