@@ -22,7 +22,7 @@ namespace MyAPI.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Service>().OwnsOne(x => x.Timer);
+            //modelBuilder.Entity<Service>().OwnsOne(x => x.Timer);
             //modelBuilder.Entity<Service>().OwnsOne(x => x.StatusHistory);
 
             //modelBuilder

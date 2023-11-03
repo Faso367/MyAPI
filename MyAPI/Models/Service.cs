@@ -10,7 +10,7 @@ namespace MyAPI.Models
     public class Service
     {
         public bool isFirstTime { get; set; }
-        public Stopwatch? Timer { get; set; }
+        //public Stopwatch? Timer { get; set; }
 
         public int Id { get; set; }
         public string Name { get; set; }
@@ -25,6 +25,7 @@ namespace MyAPI.Models
         public int? DownTime { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+
         //public DateTimeOffset CreatedAt { get; set; }
         //public DateTimeOffset? UpdatedAt { get; set; }
     }

@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using MyAPI.Services.Service2Folder;
 using MyAPI.Services.Service3Folder;
 using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.VisualBasic;
+using System;
 //using MyAPI.Services.CreateServicesFolder;
 
 namespace MyAPI.Services
@@ -19,6 +22,8 @@ namespace MyAPI.Services
         private static Service1 service1;
         private static Service2 service2;
         private static Service3 service3;
+        private static Stopwatch Timer = new Stopwatch();
+        private static DateTime StartTime;
         private static int count = 0;
 
         public ServiceEventHandler(IRepository _repository)
@@ -49,7 +54,8 @@ namespace MyAPI.Services
             // Если запускаем метод для этого экземпляра в первый раз
             if (service_db.isFirstTime)
             {
-                service_db.Timer.Start();
+                //service_db.Timer.Start();
+                StartTime = DateTime.Now;
                 service_db.isFirstTime = false;
             }
             // Чтобы отсчёт времени начался с момента получения первого сообщения, а не
@@ -57,9 +63,48 @@ namespace MyAPI.Services
             //    service_db.Timer.Start();
             service_db.Status = e.Message;
             var new_zapis = e.Message + ": " + DateTime.Now.ToString();
+
+
             var record = new History(new_zapis);
             service_db.StatusHistory.Add(record);
 
+            var currentTime = DateTime.Now;
+
+            //var a = DateTime.Parse(service_db.StatusHistory.Last().Record).ToString();
+
+            //dynamic max_dateTime = new DateTime(0);
+
+            var max_dateTime = DateTime.MinValue;
+
+
+            //comparison = (DateComparisonResult)thisDate.CompareTo(thisDateLastYear);
+
+            
+
+            foreach (History spisok in service_db.StatusHistory)
+            {
+                var loc_record = spisok.Record;
+
+                var record_part = loc_record.Substring(loc_record.Length - 8);
+
+                
+                //if(max_dateTime.CompareTo(DateTime.Parse(spisok.Record)) < 0)
+                if (DateTime.Parse(record_part) > max_dateTime)
+                    max_dateTime = DateTime.Parse(record_part);
+
+                Console.WriteLine(111);
+            }
+            string max_dateTimeStr = max_dateTime.ToString();
+
+            //Console.WriteLine(max_dateTime.ToString());
+
+            //var a = service_db.StatusHistory.Last().Record; // НЕ ВСЕГДА НАДО БРАТЬ ПОСЛЕДНИЙ ЭЛЕМЕНТ, надо брать от максимального времени
+
+            var lastTime = DateTime.Parse(max_dateTimeStr.Substring(max_dateTimeStr.Length - 8));
+
+            //Console.WriteLine(lastTime.ToString());
+
+            //DateTime.Parse(lastTime);
 
             //service_db.StatusHistory.Add(zapis);
 
@@ -72,27 +117,37 @@ namespace MyAPI.Services
             //Console.WriteLine(e.Message);
             if (e.Message == "Не работает")
             {
-                service_db.DownTime += service_db.Timer.Elapsed.Seconds;
+                service_db.DownTime += Convert.ToInt32(currentTime.Subtract(lastTime).TotalSeconds);
+
+                
+                //service_db.DownTime += service_db.Timer.Elapsed.Seconds;
 
                 //if (count != 1)
-                    service_db.Timer.Restart();
+                //    service_db.Timer.Restart();
             }
             else if (e.Message == "Работает")
             {
-                service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
+                service_db.WorkTime += Convert.ToInt32(currentTime.Subtract(lastTime).TotalSeconds);
+                
+                //service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
                 //if (count != 1)
-                    service_db.Timer.Restart();
+                //  service_db.Timer.Restart();
             }
 
             else if (e.Message == "Нестабильно работает")
             {
-                service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
+                service_db.BadWorkTime += Convert.ToInt32(currentTime.Subtract(lastTime).TotalSeconds);
+
+                //service_db.BadWorkTime += service_db.Timer.Elapsed.Seconds;
                 //if (count != 1)
-                    service_db.Timer.Restart();
+                //service_db.Timer.Restart();
             }
             
             if (count == 2)
-                service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
+                service_db.WorkTime += Convert.ToInt32(currentTime.Subtract(StartTime).TotalSeconds);
+
+            Console.WriteLine("777");
+            //service_db.WorkTime += service_db.Timer.Elapsed.Seconds;
 
             if (count % 9 == 0 && count != 0)
             {
@@ -149,7 +204,7 @@ namespace MyAPI.Services
                 //CreatedAt = DateTimeOffset.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch(),
+                //Timer = new Stopwatch(),
                 StatusHistory = new List<History>()
                 //StatusHistory = ""
 
@@ -170,7 +225,7 @@ namespace MyAPI.Services
                 CreatedAt = DateTime.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch(),
+                //Timer = new Stopwatch(),
                 //StatusHistory = new List<string>()
                 //StatusHistory = ""
                 StatusHistory = new List<History>()
@@ -189,7 +244,7 @@ namespace MyAPI.Services
                 CreatedAt = DateTime.Now,
                 Status = "DontWork",
                 isFirstTime = true,
-                Timer = new Stopwatch(),
+                //Timer = new Stopwatch(),
                 //StatusHistory = new List<string>()
                 //StatusHistory = ""
                 StatusHistory = new List<History>()
