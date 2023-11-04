@@ -7,8 +7,6 @@ namespace MyAPI.Data
         public void AddService(Service service);
         public List<PartOfService> GetServicesInfo();
         public void UpdateService(Service service);
-        public void UpdateService(AppDbContext context, Service service);
         public Task<bool> SaveChangesAsync();
-
     }
 }

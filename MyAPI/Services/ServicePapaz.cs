@@ -1,5 +1,8 @@
 ﻿namespace MyAPI.Services
 {
+    /// <summary>
+    /// Для описания сложного события (с передачей данных)
+    /// </summary>
     public class ServicePapaz
     {
         public event EventHandler<DescriptionOfEventArgs> NoticeFromService;
@@ -21,9 +24,6 @@
     // Класс для описания данных, которые передаются подписчикам
     public class DescriptionOfEventArgs : EventArgs
     {
-        // Этап 1. Определение типа для хранения информации,
-        // которая передается получателям уведомления о событии
-
         public int ServiceId { get; private set; }
         public string Message { get; private set; }
         public DescriptionOfEventArgs(string message, int serviceId)
