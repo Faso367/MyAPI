@@ -40,7 +40,8 @@ namespace MyAPI.Data
                 Name = service.Name,
                 Description = service.Description,
                 Status = service.Status,
-                StatusHistory = service.StatusHistory,
+                //StatusHistory = service.StatusHistory,
+                StatusHistory = service.StatusHistory.OrderBy(n => n).ToList(),
                 //StatusHistory = from record in service.StatusHistory
                 //                select record.ToString().Replace("record: ", ",")
                 //                //where record
